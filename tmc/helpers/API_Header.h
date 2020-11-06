@@ -17,6 +17,9 @@
 #include <stdlib.h>
 #include "Types.h"
 
+#define TRUE 1
+#define FALSE 0
+
 // TODO: Restructure these.
 /*
  * Goal: Just give these values here as status back to the IDE when used with EvalSystem.
