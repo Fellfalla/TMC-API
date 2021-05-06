@@ -22,6 +22,26 @@
 //#define TPOWERDOWN_FACTOR (4.17792*100.0/255.0)
 // TPOWERDOWN_FACTOR = k * 100 / 255 where k = 2^18 * 255 / fClk for fClk = 16000000)
 
+
+#ifdef __cplusplus
+#define EXTERN_C       extern "C"
+#define EXTERN_C_BEGIN extern "C" {
+#define EXTERN_C_END   }
+#else
+#define EXTERN_C       /* Nothing */
+#define EXTERN_C_BEGIN /* Nothing */
+#define EXTERN_C_END   /* Nothing */
+#endif
+
+// => SPI wrapper
+// Send [length] bytes stored in the [data] array over SPI and overwrite [data]
+// with the reply. The first byte sent/received is data[0].
+EXTERN_C void tmc5160_readWriteArray(uint8_t channel, uint8_t *data, size_t length);
+// <= SPI wrapper
+
+EXTERN_C_BEGIN
+
+void tmc5160_readWriteArray(uint8_t channel, uint8_t *data, size_t length);
 // Typedefs
 typedef struct
 {
@@ -45,7 +65,7 @@ typedef void (*tmc5160_callback)(TMC5160TypeDef*, ConfigState);
 #define R6C 0x00410153  // CHOPCONF
 #define R70 0xC40C001E  // PWMCONF
 
-static const int32_t tmc5160_defaultRegisterResetState[TMC5160_REGISTER_COUNT] =
+static const uint32_t tmc5160_defaultRegisterResetState[TMC5160_REGISTER_COUNT] =
 {
 //	0,   1,   2,   3,   4,   5,   6,   7,   8,   9,   A,   B,   C,   D,   E,   F
 	R00, 0,   0,   0,   0,   0,   0,   0,   0,   R09, R0A, 0,   0,   0,   0,   0, // 0x00 - 0x0F
@@ -102,7 +122,7 @@ void tmc5160_writeDatagram(TMC5160TypeDef *tmc5160, uint8_t address, uint8_t x1,
 void tmc5160_writeInt(TMC5160TypeDef *tmc5160, uint8_t address, int32_t value);
 int32_t tmc5160_readInt(TMC5160TypeDef *tmc5160, uint8_t address);
 
-void tmc5160_init(TMC5160TypeDef *tmc5160, uint8_t channel, ConfigurationTypeDef *config, const int32_t *registerResetState);
+void tmc5160_init(TMC5160TypeDef *tmc5160, uint8_t channel, ConfigurationTypeDef *config, const uint32_t *registerResetState);
 void tmc5160_fillShadowRegisters(TMC5160TypeDef *tmc5160);
 uint8_t tmc5160_reset(TMC5160TypeDef *tmc5160);
 uint8_t tmc5160_restore(TMC5160TypeDef *tmc5160);
@@ -118,5 +138,7 @@ void tmc5160_moveTo(TMC5160TypeDef *tmc5160, int32_t position, uint32_t velocity
 void tmc5160_moveBy(TMC5160TypeDef *tmc5160, int32_t *ticks, uint32_t velocityMax);
 
 uint8_t tmc5160_consistencyCheck(TMC5160TypeDef *tmc5160);
+
+EXTERN_C_END
 
 #endif /* TMC_IC_TMC5160_H_ */

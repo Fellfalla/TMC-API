@@ -7,11 +7,7 @@
 
 #include "TMC5160.h"
 
-// => SPI wrapper
-// Send [length] bytes stored in the [data] array over SPI and overwrite [data]
-// with the reply. The first byte sent/received is data[0].
-extern void tmc5160_readWriteArray(uint8_t channel, uint8_t *data, size_t length);
-// <= SPI wrapper
+
 
 // Writes (x1 << 24) | (x2 << 16) | (x3 << 8) | x4 to the given address
 void tmc5160_writeDatagram(TMC5160TypeDef *tmc5160, uint8_t address, uint8_t x1, uint8_t x2, uint8_t x3, uint8_t x4)
@@ -59,7 +55,7 @@ int32_t tmc5160_readInt(TMC5160TypeDef *tmc5160, uint8_t address)
 //     - channel: The channel index, which will be sent back in the SPI callback
 //     - config: A ConfigurationTypeDef struct, which will be used by the IC
 //     - registerResetState: An int32_t array with 128 elements. This holds the values to be used for a reset.
-void tmc5160_init(TMC5160TypeDef *tmc5160, uint8_t channel, ConfigurationTypeDef *config, const int32_t *registerResetState)
+void tmc5160_init(TMC5160TypeDef *tmc5160, uint8_t channel, ConfigurationTypeDef *config, const uint32_t *registerResetState)
 {
 	tmc5160->velocity  = 0;
 	tmc5160->oldTick   = 0;
